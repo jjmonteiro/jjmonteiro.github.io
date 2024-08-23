@@ -25,50 +25,55 @@
             measurementId: "G-4DFDTNZLEN"
         };
 
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const database = getDatabase(app);
+		// Initialize Firebase
+		const app = initializeApp(firebaseConfig);
+		const database = getDatabase(app);
 
-        // Get URL parameters
-        const urlParams = new URLSearchParams(window.location.search);
-        const accessToken = urlParams.get('accessToken');
+		// Get URL parameters
+		const urlParams = new URLSearchParams(window.location.search);
+		const accessToken = urlParams.get('accessToken');
 
-        if (accessToken) {
-            // Hash the token using SHA-256
-            const hashedToken = SHA256(accessToken).toString();
+		console.log('Access Token:', accessToken);
 
-            // Reference to validate token
-            const validTokensRef = ref(database, 'validTokens/' + hashedToken);
+		if (accessToken) {
+		  // Hash the token using SHA-256
+		  const hashedToken = SHA256(accessToken).toString();
 
-            get(validTokensRef).then((snapshot) => {
-                if (snapshot.exists()) {
-                    // Token is valid, enable switch
-                    document.getElementById('switch').disabled = false;
+		  console.log('Hashed Token:', hashedToken);
 
-                    // Reference to the switch state in the database
-                    const switchRef = ref(database, 'switchState');
+		  // Reference to validate token
+		  const validTokensRef = ref(database, 'validTokens/' + hashedToken);
 
-                    // Listen for changes to the switch state in the database
-                    onValue(switchRef, (snapshot) => {
-                        const switchState = snapshot.val();
-                        document.getElementById('switch').checked = switchState;
-                    });
+		  get(validTokensRef).then((snapshot) => {
+			if (snapshot.exists()) {
+			  console.log('Token is valid');
+			  // Token is valid, enable switch
+			  document.getElementById('switch').disabled = false;
 
-                    // Update the database when the switch is toggled
-                    document.getElementById('switch').addEventListener('change', function() {
-                        const switchState = this.checked;
-                        set(switchRef, switchState);
-                    });
-                } else {
-                    alert('Access denied: Invalid token.');
-                }
-            }).catch((error) => {
-                console.error('Error checking token:', error);
-                alert('Access denied: Error checking token.');
-            });
-        } else {
-            alert('Access denied: No token provided.');
-        }
+			  // Reference to the switch state in the database
+			  const switchRef = ref(database, 'switchState');
+
+			  // Listen for changes to the switch state in the database
+			  onValue(switchRef, (snapshot) => {
+				const switchState = snapshot.val();
+				document.getElementById('switch').checked = switchState;
+			  });
+
+			  // Update the database when the switch is toggled
+			  document.getElementById('switch').addEventListener('change', function() {
+				const switchState = this.checked;
+				set(switchRef, switchState);
+			  });
+			} else {
+			  console.log('Access denied: Invalid token.');
+			}
+		  }).catch((error) => {
+			console.error('Error checking token:', error);
+		  });
+		} else {
+		  console.log('Access denied: No token provided.');
+		}
+
     </script>
 </body>
 </html>
