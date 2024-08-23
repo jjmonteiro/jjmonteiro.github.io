@@ -56,7 +56,6 @@ input {
 
     body {
         padding: 20px;
-        height: auto;
         justify-content: flex-start;
         align-items: flex-start;
     }

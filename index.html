@@ -44,7 +44,6 @@
 					const sysInfo = await getBrowserInfo();
 					response = `${prompt} ${cmd}\n${sysInfo}`;
 				} else if (cmd === 'date' || cmd === 'time') {
-				    // Get the current time
 					const formattedDate = getSystemDate();
 					response = `${prompt} ${cmd}\n${formattedDate}`;
                 } else {
