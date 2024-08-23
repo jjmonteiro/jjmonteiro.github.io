@@ -3,18 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Real-Time Switch with Firebase</title>
+    <title>Secure Toggle</title>
 </head>
 <body>
     <label for="switch">Switch:</label>
-    <input type="checkbox" id="switch">
+    <input type="checkbox" id="switch" disabled> <!-- Initially disabled -->
 
     <script type="module">
-        // Import the functions you need from the SDKs you need
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
-        import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
+        import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
+        import { SHA256 } from 'https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.js';
 
-        // Your web app's Firebase configuration
+        // Your Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyD_TKcjCX3vhJW7ErcUh9A8MdH4tpjhVgI",
             authDomain: "jjrmonteir0.firebaseapp.com",
@@ -27,21 +27,44 @@
 
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
-
-        // Initialize Realtime Database and get a reference to the service
         const database = getDatabase(app);
-        const switchRef = ref(database, 'switchState');
 
-        // Listen for changes to the switch state in the database
-        onValue(switchRef, (snapshot) => {
-            const switchState = snapshot.val();
-            document.getElementById('switch').checked = switchState;
-        });
+        // Get URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const accessToken = urlParams.get('accessToken');
 
-        // Update the database when the switch is toggled
-        document.getElementById('switch').addEventListener('change', function() {
-            const switchState = this.checked;
-            set(switchRef, switchState);
+        // Hash the token using SHA-256
+        const hashedToken = SHA256(accessToken).toString();
+
+        // Reference to the valid tokens in the database
+        const validTokensRef = ref(database, 'validTokens/' + hashedToken);
+
+        // Check if the hashed token exists in the database
+        get(validTokensRef).then((snapshot) => {
+            if (snapshot.exists()) {
+                // Token is valid, enable switch
+                document.getElementById('switch').disabled = false;
+
+                // Reference to the switch state in the database
+                const switchRef = ref(database, 'switchState');
+
+                // Listen for changes to the switch state in the database
+                onValue(switchRef, (snapshot) => {
+                    const switchState = snapshot.val();
+                    document.getElementById('switch').checked = switchState;
+                });
+
+                // Update the database when the switch is toggled
+                document.getElementById('switch').addEventListener('change', function() {
+                    const switchState = this.checked;
+                    set(switchRef, switchState);
+                });
+            } else {
+                alert('Access denied: Invalid token.');
+            }
+        }).catch((error) => {
+            console.error('Error checking token:', error);
+            alert('Access denied: Error checking token.');
         });
     </script>
 </body>
