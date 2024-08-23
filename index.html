@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Secure Toggle</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.js"></script>
 </head>
 <body>
     <label for="switch">Switch:</label>
@@ -12,7 +13,6 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
         import { getDatabase, ref, set, get, onValue } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
-        import { SHA256 } from 'https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.js';
 
         // Your Firebase configuration
         const firebaseConfig = {
@@ -35,7 +35,7 @@
 
         if (accessToken) {
             // Hash the token using SHA-256
-            const hashedToken = SHA256(accessToken).toString();
+            const hashedToken = CryptoJS.SHA256(accessToken).toString();
 
             // Reference to validate token
             const validTokensRef = ref(database, 'validTokens/' + hashedToken);
