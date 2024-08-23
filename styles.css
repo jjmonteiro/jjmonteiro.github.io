@@ -1,0 +1,38 @@
+body {
+    background-color: black;
+    color: green;
+    font-family: monospace;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+#terminal {
+    width: 60%;
+    height: 60%;
+    border: 2px solid green;
+    padding: 10px;
+    overflow-y: auto;
+}
+#input-line {
+    display: flex;
+}
+#prompt, .output {
+    font-size: 0.9rem; /* Slightly smaller font size */
+}
+input {
+    background-color: black;
+    color: green;
+    border: none;
+    outline: none;
+    flex-grow: 1;
+    font-family: monospace;
+    font-size: 0.9rem; /* Match the prompt font size */
+    margin-left: 5px; /* Add space before user input */
+}
+.output {
+    white-space: pre-wrap;
+    margin-bottom: 10px;
+}

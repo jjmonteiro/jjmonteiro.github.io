@@ -3,77 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Secure Toggle</title>
+    <title>Terminal</title>
+	<link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <label for="switch">Switch:</label>
-    <input type="checkbox" id="switch" disabled> <!-- Initially disabled -->
+    <div id="terminal">
+        <div id="output"></div>
+        <div id="input-line">
+            <span id="prompt">user@terminal:~$</span>
+            <input type="text" id="cmd-input" autofocus>
+        </div>
+    </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
-        import { getDatabase, ref, set, get, onValue } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
-        import { SHA256 } from 'https://cdn.skypack.dev/crypto-js@4.1.1';
+    <script src="info.js"></script>
+	<script src="date.js"></script>
+    <script>
+        const commandInput = document.getElementById('cmd-input');
+        const outputDiv = document.getElementById('output');
+        const terminal = document.getElementById('terminal');
+        const prompt = 'user@terminal:~$';
+        const helpMessage = 'Available commands:\nhelp - Show available commands\n? - Show available commands\nhello - Greet the terminal\nclear - Clear the terminal\ntime - Show current time\ninfo - Show system information';
 
-        // Your Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyD_TKcjCX3vhJW7ErcUh9A8MdH4tpjhVgI",
-            authDomain: "jjrmonteir0.firebaseapp.com",
-            projectId: "jjrmonteir0",
-            storageBucket: "jjrmonteir0.appspot.com",
-            messagingSenderId: "420345259057",
-            appId: "1:420345259057:web:1791546ba69f6eaf29a110",
-            measurementId: "G-4DFDTNZLEN"
-        };
+		window.addEventListener('click', function() {
+            commandInput.focus();
+        });
 
-		// Initialize Firebase
-		const app = initializeApp(firebaseConfig);
-		const database = getDatabase(app);
+        commandInput.addEventListener('keypress', async function(event) {
+            if (event.key === 'Enter') {
+                const cmd = commandInput.value.trim();
+                let response = prompt;
 
-		// Get URL parameters
-		const urlParams = new URLSearchParams(window.location.search);
-		const accessToken = urlParams.get('accessToken');
+                if (cmd === '') {
+                    response = prompt;
+				} else if (cmd === 'help' || cmd === '?') {
+					response = `${prompt} ${cmd}\n${helpMessage}`;
+                } else if (cmd === 'clear') {
+                    outputDiv.innerHTML = '';
+                    response = prompt;
+                } else if (cmd === 'info') {
+					const sysInfo = await getBrowserInfo();
+					response = `${prompt} ${cmd}\n${sysInfo}`;
+				} else if (cmd === 'date' || cmd === 'time') {
+				    // Get the current time
+					const formattedDate = getSystemDate();
+					response = `${prompt} ${cmd}\n${formattedDate}`;
+                } else {
+                    response = `'${cmd}' cmd is not recognized.`;
+                    response = `${prompt} ${cmd}\n${response}`;
+                }
 
-		console.log('Access Token:', accessToken);
-
-		if (accessToken) {
-		  // Hash the token using SHA-256
-		  const hashedToken = SHA256(accessToken).toString();
-
-		  console.log('Hashed Token:', hashedToken);
-
-		  // Reference to validate token
-		  const validTokensRef = ref(database, 'validTokens/' + hashedToken);
-
-		  get(validTokensRef).then((snapshot) => {
-			if (snapshot.exists()) {
-			  console.log('Token is valid');
-			  // Token is valid, enable switch
-			  document.getElementById('switch').disabled = false;
-
-			  // Reference to the switch state in the database
-			  const switchRef = ref(database, 'switchState');
-
-			  // Listen for changes to the switch state in the database
-			  onValue(switchRef, (snapshot) => {
-				const switchState = snapshot.val();
-				document.getElementById('switch').checked = switchState;
-			  });
-
-			  // Update the database when the switch is toggled
-			  document.getElementById('switch').addEventListener('change', function() {
-				const switchState = this.checked;
-				set(switchRef, switchState);
-			  });
-			} else {
-			  console.log('Access denied: Invalid token.');
-			}
-		  }).catch((error) => {
-			console.error('Error checking token:', error);
-		  });
-		} else {
-		  console.log('Access denied: No token provided.');
-		}
-
+                outputDiv.innerHTML += `<div class="output">${response}</div>`;
+                terminal.scrollTop = terminal.scrollHeight; // Auto-scroll to the bottom
+                commandInput.value = ''; // Clear the input field
+            }
+        });
     </script>
 </body>
 </html>
