@@ -11,7 +11,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
-        import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
+        import { getDatabase, ref, set, get, onValue } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
         import { SHA256 } from 'https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.js';
 
         // Your Firebase configuration
@@ -33,39 +33,42 @@
         const urlParams = new URLSearchParams(window.location.search);
         const accessToken = urlParams.get('accessToken');
 
-        // Hash the token using SHA-256
-        const hashedToken = SHA256(accessToken).toString();
+        if (accessToken) {
+            // Hash the token using SHA-256
+            const hashedToken = SHA256(accessToken).toString();
 
-        // Reference to the valid tokens in the database
-        const validTokensRef = ref(database, 'validTokens/' + hashedToken);
+            // Reference to validate token
+            const validTokensRef = ref(database, 'validTokens/' + hashedToken);
 
-        // Check if the hashed token exists in the database
-        get(validTokensRef).then((snapshot) => {
-            if (snapshot.exists()) {
-                // Token is valid, enable switch
-                document.getElementById('switch').disabled = false;
+            get(validTokensRef).then((snapshot) => {
+                if (snapshot.exists()) {
+                    // Token is valid, enable switch
+                    document.getElementById('switch').disabled = false;
 
-                // Reference to the switch state in the database
-                const switchRef = ref(database, 'switchState');
+                    // Reference to the switch state in the database
+                    const switchRef = ref(database, 'switchState');
 
-                // Listen for changes to the switch state in the database
-                onValue(switchRef, (snapshot) => {
-                    const switchState = snapshot.val();
-                    document.getElementById('switch').checked = switchState;
-                });
+                    // Listen for changes to the switch state in the database
+                    onValue(switchRef, (snapshot) => {
+                        const switchState = snapshot.val();
+                        document.getElementById('switch').checked = switchState;
+                    });
 
-                // Update the database when the switch is toggled
-                document.getElementById('switch').addEventListener('change', function() {
-                    const switchState = this.checked;
-                    set(switchRef, switchState);
-                });
-            } else {
-                alert('Access denied: Invalid token.');
-            }
-        }).catch((error) => {
-            console.error('Error checking token:', error);
-            alert('Access denied: Error checking token.');
-        });
+                    // Update the database when the switch is toggled
+                    document.getElementById('switch').addEventListener('change', function() {
+                        const switchState = this.checked;
+                        set(switchRef, switchState);
+                    });
+                } else {
+                    alert('Access denied: Invalid token.');
+                }
+            }).catch((error) => {
+                console.error('Error checking token:', error);
+                alert('Access denied: Error checking token.');
+            });
+        } else {
+            alert('Access denied: No token provided.');
+        }
     </script>
 </body>
 </html>
