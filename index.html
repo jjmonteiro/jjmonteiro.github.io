@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-Time Switch with Firebase</title>
+</head>
+<body>
+    <label for="switch">Switch:</label>
+    <input type="checkbox" id="switch">
+
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
+        import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyD_TKcjCX3vhJW7ErcUh9A8MdH4tpjhVgI",
+            authDomain: "jjrmonteir0.firebaseapp.com",
+            projectId: "jjrmonteir0",
+            storageBucket: "jjrmonteir0.appspot.com",
+            messagingSenderId: "420345259057",
+            appId: "1:420345259057:web:1791546ba69f6eaf29a110",
+            measurementId: "G-4DFDTNZLEN"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+
+        // Initialize Realtime Database and get a reference to the service
+        const database = getDatabase(app);
+        const switchRef = ref(database, 'switchState');
+
+        // Listen for changes to the switch state in the database
+        onValue(switchRef, (snapshot) => {
+            const switchState = snapshot.val();
+            document.getElementById('switch').checked = switchState;
+        });
+
+        // Update the database when the switch is toggled
+        document.getElementById('switch').addEventListener('change', function() {
+            const switchState = this.checked;
+            set(switchRef, switchState);
+        });
+    </script>
+</body>
+</html>
