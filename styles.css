@@ -1,3 +1,4 @@
+/* Generic styles */
 body {
     background-color: black;
     color: green;
@@ -35,4 +36,28 @@ input {
 .output {
     white-space: pre-wrap;
     margin-bottom: 10px;
+}
+
+/* Mobile-specific styles */
+@media (max-width: 600px) {
+    #terminal {
+        width: 95%;
+        height: 70%;
+        font-size: 0.8rem;
+    }
+
+    #prompt, .output {
+        font-size: 0.8rem;
+    }
+
+    input {
+        font-size: 0.8rem;
+    }
+
+    body {
+        padding: 20px;
+        height: auto;
+        justify-content: flex-start;
+        align-items: flex-start;
+    }
 }
