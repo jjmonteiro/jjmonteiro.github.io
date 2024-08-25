@@ -4,19 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Terminal</title>
-	<link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div id="terminal">
         <div id="output"></div>
         <div id="input-line">
-            <span id="prompt">user@terminal:~$</span>
+            <span id="prompt"></span>
             <input type="text" id="cmd-input" autofocus>
         </div>
     </div>
 
     <script src="info.js"></script>
-	<script src="date.js"></script>
+    <script src="date.js"></script>
     <script>
         const commandInput = document.getElementById('cmd-input');
         const outputDiv = document.getElementById('output');
@@ -24,8 +24,14 @@
         const prompt = 'user@terminal:~$';
         const helpMessage = 'Available commands:\nhelp - Show available commands\n? - Show available commands\nhello - Greet the terminal\nclear - Clear the terminal\ntime - Show current time\ninfo - Show system information';
 
-		window.addEventListener('click', function() {
-            commandInput.focus();
+        document.getElementById('prompt').innerHTML = prompt;
+        
+        document.addEventListener('click', function(event) {
+            const isTextSelected = window.getSelection().toString().length > 0;
+
+            if (!isTextSelected && !outputDiv.contains(event.target)) {
+                commandInput.focus();
+            }
         });
 
         commandInput.addEventListener('keypress', async function(event) {
@@ -35,17 +41,21 @@
 
                 if (cmd === '') {
                     response = prompt;
-				} else if (cmd === 'help' || cmd === '?') {
-					response = `${prompt} ${cmd}\n${helpMessage}`;
+                } else if (cmd === 'help' || cmd === '?') {
+                    response = `${prompt} ${cmd}\n${helpMessage}`;
                 } else if (cmd === 'clear') {
                     outputDiv.innerHTML = '';
                     response = prompt;
                 } else if (cmd === 'info') {
-					const sysInfo = await getBrowserInfo();
-					response = `${prompt} ${cmd}\n${sysInfo}`;
-				} else if (cmd === 'date' || cmd === 'time') {
-					const formattedDate = getSystemDate();
-					response = `${prompt} ${cmd}\n${formattedDate}`;
+                    const sysInfo = await getBrowserInfo();
+                    const gpuInfo = await getGraphicsInfo();
+                    response = `${prompt} ${cmd}\n${sysInfo}\n${gpuInfo}`;
+                } else if (cmd === 'ip') {
+                    const IPaddr = await getIPAddressAndLocation();
+                    response = `${prompt} ${cmd}\n${IPaddr}`;
+                } else if (cmd === 'date' || cmd === 'time') {
+                    const formattedDate = getSystemDate();
+                    response = `${prompt} ${cmd}\n${formattedDate}`;
                 } else {
                     response = `'${cmd}' cmd is not recognized.`;
                     response = `${prompt} ${cmd}\n${response}`;
