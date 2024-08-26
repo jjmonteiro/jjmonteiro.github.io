@@ -17,15 +17,21 @@
 
     <script src="info.js"></script>
     <script src="date.js"></script>
-    <script>
+    <script type="module" src="firebase.js"></script>
+    <script type="module">
+        import { getData } from './firebase.js';
+        
         const commandInput = document.getElementById('cmd-input');
         const outputDiv = document.getElementById('output');
         const terminal = document.getElementById('terminal');
         const prompt = 'user@terminal:~$';
-        const helpMessage = 'Available commands:\nhelp - Show available commands\n? - Show available commands\nhello - Greet the terminal\nclear - Clear the terminal\ntime - Show current time\ninfo - Show system information';
+        const helpMessage = 'Available commands:\nhelp/? - Show help\nclear - Clear the terminal\ninfo - Show system info\nip - Show IP and location\ndate/time - Show current date and time\ngetdata -[type] - Get specific data from Firebase';
 
         document.getElementById('prompt').innerHTML = prompt;
-        
+
+        let commandHistory = [];
+        let historyIndex = -1;
+
         document.addEventListener('click', function(event) {
             const isTextSelected = window.getSelection().toString().length > 0;
 
@@ -34,10 +40,37 @@
             }
         });
 
+        commandInput.addEventListener('keydown', function(event) {
+            if (event.key === 'ArrowUp') {
+                if (historyIndex > 0) {
+                    historyIndex--;
+                    commandInput.value = commandHistory[historyIndex];
+                } else if (historyIndex === -1 && commandHistory.length > 0) {
+                    historyIndex = commandHistory.length - 1;
+                    commandInput.value = commandHistory[historyIndex];
+                }
+                setTimeout(() => commandInput.setSelectionRange(commandInput.value.length, commandInput.value.length), 0);
+            } else if (event.key === 'ArrowDown') {
+                if (historyIndex < commandHistory.length - 1) {
+                    historyIndex++;
+                    commandInput.value = commandHistory[historyIndex];
+                } else if (historyIndex === commandHistory.length - 1) {
+                    historyIndex++;
+                    commandInput.value = '';
+                }
+                setTimeout(() => commandInput.setSelectionRange(commandInput.value.length, commandInput.value.length), 0);
+            }
+        });
+
         commandInput.addEventListener('keypress', async function(event) {
             if (event.key === 'Enter') {
                 const cmd = commandInput.value.trim().toLowerCase();
                 let response = prompt;
+
+                if (cmd !== '') {
+                    commandHistory.push(cmd);
+                    historyIndex = -1;
+                }
 
                 if (cmd === '') {
                     response = prompt;
@@ -56,8 +89,12 @@
                 } else if (cmd === 'date' || cmd === 'time') {
                     const formattedDate = getSystemDate();
                     response = `${prompt} ${cmd}\n${formattedDate}`;
+                } else if (cmd.startsWith('getdata -')) {
+                    const dataType = cmd.slice(9).trim();
+                    const dataValue = await getData(dataType);
+                    response = `${prompt} ${cmd}\n${dataValue}`;
                 } else {
-                    response = `'${cmd}' cmd is not recognized.`;
+                    response = `'${cmd}' is not recognized.`;
                     response = `${prompt} ${cmd}\n${response}`;
                 }
 
