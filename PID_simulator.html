@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PID Heating Simulator</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="pid.js" defer></script>
+    <script src="heating.js" defer></script>
+    <link rel="stylesheet" href="styles.css">
+    <link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet'>
+</head>
+<body>
+    <div class="top-bar">
+        <h2>PID Heating Simulator</h2>
+    </div>
+    
+    <div id="main-container">
+        <!-- Left Block -->
+        <div id="left-block">
+            <!-- Left Top -->
+            <div id="left-top">
+                <div class="container" id="chart-container">
+                    <canvas id="tempChartCanvas"></canvas>
+                </div>
+            </div>
+            
+            <!-- Left Bottom -->
+            <div id="left-bottom">
+            
+                <div class="container" id="info-container">
+                    <div class="info-column" id="info-text">
+                        <p class="info-text">P value: <span id="pTermDisplay" class="value-display">0.00</span></p>
+                        <p class="info-text">I value: <span id="iTermDisplay" class="value-display">0.00</span></p>
+                        <p class="info-text">D value: <span id="dTermDisplay" class="value-display">0.00</span></p>
+                        <p class="info-text">Error: <span id="errorDisplay" class="value-display">0.00</span> °C</p>
+                    </div>
+                    <div class="info-column" id="info-bars">
+                        <p class="info-text">Current Temperature</p>
+                        <div class="progress-bar-container"><div id="currentTempProgress" class="progress-bar-fill"><span id='currentTempText' class="progress-bar-text">0 °C</span></div></div>
+                        <p class="info-text">Power Output</p>
+                        <div class="progress-bar-container"><div id="powerOutputProgress" class="progress-bar-fill"><span id='powerOutputText' class="progress-bar-text">0%</span></div></div>
+                    </div>
+                    <div class="info-column" id="info-buttons">
+                        <button id="dumpHeatBtn">Dump Heat</button>
+                        <button id="clearIntegralBtn">Clear Integral</button>
+                        <button id="resetSimulationBtn">Reset Simulation</button>
+                    </div>
+                </div>
+            
+            </div>
+        </div>
+
+        <!-- Right Block with PID Controls -->
+        <div id="right-column">
+            <div class="container" id="pid-container">
+                <h3>Controller Settings</h3>
+                <br>
+                <div id="pid-controls-top">
+                    <label for="kpSlider">Kp: <span id="kpValue">50</span></label>
+                    <input type="range" id="kpSlider" min="0" max="100" step="0.01" value="50">
+
+                    <label for="kiSlider">Ki: <span id="kiValue">0.01</span></label>
+                    <input type="range" id="kiSlider" min="0" max="1" step="0.01" value="0.01">
+
+                    <label for="kdSlider">Kd: <span id="kdValue">10</span></label>
+                    <input type="range" id="kdSlider" min="0" max="100" value="10">
+
+                    <label for="setpointSlider">Setpoint: <span id="setpointValue">20</span>°C</label>
+                    <input type="range" id="setpointSlider" min="10" max="30" value="20">
+                </div>
+                <div id="pid-controls-bottom">
+                    <label for="heatLossSlider">Heat Loss Factor: <span id="heatLossValue">2</span>%</label>
+                    <input type="range" id="heatLossSlider" min="0" max="5" value="2">
+                    
+                    <label for="outsideTempSlider">Outside Temperature: <span id="outsideTempValue">5</span>°C</label>
+                    <input type="range" id="outsideTempSlider" min="-10" max="25" value="5">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bottom-bar">
+        &copy; 2024 J.Monteiro
+    </div>
+</body>
+</html>

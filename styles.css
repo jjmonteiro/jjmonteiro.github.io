@@ -1,64 +1,251 @@
-/* Generic styles */
-body {
-    background-color: black;
-    color: green;
-    font-family: monospace;
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    #main-container {
+        flex-direction: column;
+        overflow: auto;
+    }
+    #left-block, #right-column {
+        width: 100%;
+        height: auto;
+    }
+}
+
+/* General reset and box-sizing for better control */
+* {
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
+}
+
+/* Body and page setup */
+body {
+    font-family: 'Raleway', Arial, sans-serif;
     display: flex;
-    justify-content: center;
-    align-items: center;
+    flex-direction: column;
     height: 100vh;
+    background-color: #beced6;
 }
-#terminal {
-    width: 60%;
-    height: 60%;
-    border: 2px solid green;
-    padding: 10px;
-    overflow-y: auto;
-    user-select: text;
-}
-#input-line {
+
+/* Main container */
+#main-container {
     display: flex;
+    flex: 1;
+    width: 100%;
+    padding: 0 10%;
+    overflow: hidden;
 }
-#prompt, .output {
-    font-size: 0.9rem; /* Slightly smaller font size */
+
+/* Left and Right Columns */
+#left-block {
+    display: flex;
+    flex-direction: column;
+    width: 75%;
+    height: 100%;
 }
-input {
-    background-color: black;
-    color: green;
-    border: none;
-    outline: none;
-    flex-grow: 1;
-    font-family: monospace;
-    font-size: 0.9rem; /* Match the prompt font size */
-    margin-left: 5px; /* Add space before user input */
+
+/* Left Top and Bottom */
+#left-top {
+    flex: 2; /* Take up 2/3 of #left-block */
+    padding: 10px;
+    text-align: center;
+    overflow: auto;
 }
-.output {
-    white-space: pre-wrap;
+
+#left-bottom {
+    flex: 1; /* Take up 1/3 of #left-block */
+    padding: 10px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+/* Right Column - 1/4 of the page width */
+#right-column {
+    width: 25%;
+    padding: 10px;
+    text-align: center;
+}
+
+/* Top and Bottom Bars */
+.top-bar {
+    padding: 5px;
+    text-align: center;
+}
+
+h2 {
+    color: #fff;
+    background-color: #acbbc2;
+    font-size: 24px;
+    padding: 10px 100px;
+    border-radius: 50px;
+    display: inline-block;
+}
+
+.bottom-bar {
+    color: #8c8c8c;
+    font-size: 10px;
+    text-align: right;
+    padding: 10px;
+}
+
+/* Chart Container */
+#chart-container {
+    width: 100%;
+    overflow: hidden;
+}
+
+/* PID Controls Container */
+#pid-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column; /* Arrange children vertically */
+    justify-content: space-between;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+#pid-controls-bottom {
+    margin-top: auto;
+}
+
+#pid-controls, #temp-container {
+    text-align: center;
     margin-bottom: 10px;
 }
 
-/* Mobile-specific styles */
-@media (max-width: 600px) {
-    #terminal {
-        width: 95%;
-        height: 70%;
-        font-size: 0.8rem;
-    }
-
-    #prompt, .output {
-        font-size: 0.8rem;
-    }
-
-    input {
-        font-size: 0.8rem;
-    }
-
-    body {
-        padding: 20px;
-        height: 60vh;
-        justify-content: flex-start;
-        align-items: flex-start;
-    }
+input[type="range"] {
+    width: 100%;
+    margin-bottom: 15px;
 }
+
+.container {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    height: 100%
+}
+
+/* PID Slider Styles */
+.pid-slider {
+    margin-bottom: 15px;
+}
+
+.pid-slider label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 14px;
+}
+
+.pid-slider input[type="range"] {
+    width: 100%;
+}
+
+/* Container for the values and progress bars */
+#info-container {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.info-column {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  width: 100%;
+  padding: 15px;
+}
+
+#info-text {
+    width: 25%;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#info-bars {
+    width: 50%;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#info-buttons {
+    width: 25%;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.info-text {
+    text-align: left;
+    font-size: 16px;
+    padding-left: 8px;
+}
+
+button {
+    font-family: inherit;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    margin: 0px;
+    padding: 5%;
+    cursor: pointer;
+    overflow: hidden;
+    position: relative;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+.progress-bar-container {
+    height: 100%;
+    background-color: #f2f2f2;
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+    margin: 10px;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    width: 0;
+    background-color: #3b82f6;
+    transition: width 0.3s;
+}
+
+#currentTempProgress {
+    background-color: #4bc0c0;
+}
+
+#powerOutputProgress {
+    background-color: #ff7d66;
+}
+
+.progress-bar-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: black;
+    font-size: 16px;
+    pointer-events: none;
+}
+
+.value-display {
+    font-weight: bold;
+    font-size: 16px;
+}
+
+
+
+
+
