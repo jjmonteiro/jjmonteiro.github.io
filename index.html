@@ -4,10 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PID Heating Simulator</title>
-    <link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png">
-    <link rel="manifest" href="favicon/site.webmanifest">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="pid.js" defer></script>
     <script src="heating.js" defer></script>
@@ -15,37 +11,37 @@
     <link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet'>
 </head>
 <body>
+<div class="page-container">
+	<!-- Top Bar -->
     <div class="top-bar">
         <h2>PID Heating Simulator</h2>
     </div>
-    
-    <div id="main-container">
+    <div class="main-container">
         <!-- Left Block -->
-        <div id="left-block">
+        <div class="left-block">
             <!-- Left Top -->
-            <div id="left-top">
-                <div class="container" id="chart-container">
+            <div class="left-top">
+                <div class="container chart-container">
                     <canvas id="tempChartCanvas"></canvas>
                 </div>
             </div>
-            
             <!-- Left Bottom -->
-            <div id="left-bottom">
+            <div class="left-bottom">
             
-                <div class="container" id="info-container">
-                    <div class="info-column" id="info-text">
+                <div class="container info-container">
+                    <div class="info-column info-text">
                         <p class="info-text">P value: <span id="pTermDisplay" class="value-display">0.00</span></p>
                         <p class="info-text">I value: <span id="iTermDisplay" class="value-display">0.00</span></p>
                         <p class="info-text">D value: <span id="dTermDisplay" class="value-display">0.00</span></p>
-                        <p class="info-text">Error: <span id="errorDisplay" class="value-display">0.00</span> °C</p>
+                        <p class="info-text">Error: <span id="errorDisplay" class="value-display">0.00</span>°C</p>
                     </div>
-                    <div class="info-column" id="info-bars">
+                    <div class="info-column info-bars">
                         <p class="info-text">Current Temperature</p>
-                        <div class="progress-bar-container"><div id="currentTempProgress" class="progress-bar-fill"><span id='currentTempText' class="progress-bar-text">0 °C</span></div></div>
+                        <div class="progress-bar-container"><div id="currentTempProgress" class="progress-bar-fill"><span id='currentTempText' class="progress-bar-text">0°C</span></div></div>
                         <p class="info-text">Power Output</p>
                         <div class="progress-bar-container"><div id="powerOutputProgress" class="progress-bar-fill"><span id='powerOutputText' class="progress-bar-text">0%</span></div></div>
                     </div>
-                    <div class="info-column" id="info-buttons">
+                    <div class="info-column">
                         <button id="dumpHeatBtn">Dump Heat</button>
                         <button id="clearIntegralBtn">Clear Integral</button>
                         <button id="resetSimulationBtn">Reset Simulation</button>
@@ -56,11 +52,11 @@
         </div>
 
         <!-- Right Block with PID Controls -->
-        <div id="right-column">
-            <div class="container" id="pid-container">
+        <div class="right-block">
+            <div class="container pid-container">
                 <h3>Controller Settings</h3>
                 <br>
-                <div id="pid-controls-top">
+                <div class="container pid-controls-top">
                     <label for="kpSlider">Kp: <span id="kpValue">50</span></label>
                     <input type="range" id="kpSlider" min="0" max="100" step="0.01" value="50">
 
@@ -73,7 +69,7 @@
                     <label for="setpointSlider">Setpoint: <span id="setpointValue">20</span>°C</label>
                     <input type="range" id="setpointSlider" min="10" max="30" value="20">
                 </div>
-                <div id="pid-controls-bottom">
+                <div class="container pid-controls-bottom">
                     <label for="heatLossSlider">Heat Loss Factor: <span id="heatLossValue">2</span>%</label>
                     <input type="range" id="heatLossSlider" min="0" max="5" value="2">
                     
@@ -83,9 +79,10 @@
             </div>
         </div>
     </div>
-
+	<!-- Bottom Bar -->
     <div class="bottom-bar">
         &copy; 2024 J.Monteiro
     </div>
+</div>
 </body>
 </html>
