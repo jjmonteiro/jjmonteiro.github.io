@@ -86,7 +86,7 @@ function simulateHeating() {
     function updateProgressBar(elementId, textId, value, max = 100) {
         const width = Math.min((value / max) * 100, 100); // Calculate width as a percentage
         document.getElementById(elementId).style.width = width + "%"; // Update bar width
-        document.getElementById(textId).textContent = value.toFixed(2) + (textId.includes("Temp") ? " °C" : " %"); // Update text content
+        document.getElementById(textId).textContent = value.toFixed(1) + (textId.includes("Temp") ? "°C" : "%"); // Update text content
     }
     
     //currentTempDisplay.textContent = currentTemp.toFixed(2);
