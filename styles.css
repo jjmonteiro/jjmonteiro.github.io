@@ -14,6 +14,9 @@ body {
     min-height: 100vh;
     overflow: auto;
 }
+.adspace {
+    height: 100%;
+}
 
 /* Container div for main padding */
 .page-container {
