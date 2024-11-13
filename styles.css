@@ -36,7 +36,8 @@ body {
 
 .top-bar {
     top: 0;
-    height: 35px;
+    height: 50px;
+    line-height: 50px;
 }
 
 .bottom-bar {
@@ -53,7 +54,7 @@ body {
     display: flex;
     flex: 1;
     width: 100%;
-    margin-top: 35px;
+    margin-top: 50px;
     margin-bottom: 20px;
     overflow: hidden;
 }
@@ -208,16 +209,24 @@ button:hover {
 /* Responsive adjustments */
 @media (max-width: 700px) {
     .main-container {
-      height: 100vh;
-      flex-direction: column;
+        height: 100vh;
+        flex-direction: column;
+    }
+    
+    h1 {
+        font-size: 6vw;
     }
 
     .page-container {
-      padding: 0 2%;
+        padding: 0 2%;
     }
 
     .left-block, .right-block {
-      width: 100%;
+        width: 100%;
+    }
+    
+    .chart-container {
+        min-height: 30vh;
     }
     
     .info-text {
